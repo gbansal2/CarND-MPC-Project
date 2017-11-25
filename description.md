@@ -27,9 +27,9 @@ Here, f(x) is the reference trajectory which is a polynomial fit of order 3. psi
 
 The other key component of the model is the cost. I evaluated cost as the sum of the following:
 
-1. cte^2
-2. epsi^2
-3. (v-v_ref)^2
+1. cte<sup>2</sup>
+2. epsi<sup>2</sup>
+3. (v-v_ref)<sup>2</sup>
 
 ## Choice of T, N, and dt
 
