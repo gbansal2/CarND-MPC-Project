@@ -9,7 +9,7 @@ using CppAD::AD;
 //size_t N = 200;
 //size_t N = 250;
 size_t N = 250;
-double dt = 0.006;
+double dt = 0.005;
 //double dt = 0.005;
 //double dt = 0.002;
 
