@@ -29,7 +29,11 @@ The other key component of the model is the cost. I evaluated cost as the sum of
 
 1. cte<sup>2</sup>
 2. epsi<sup>2</sup>
-3. (v-v_ref)<sup>2</sup>
+3. (v-v_ref)<sup>2</sup>, with v_ref set to 30.
+4. 200 * delta<sup>2</sup>
+5. 100 * a<sup>2</sup>
+6. 500 * (delta_next - delta)<sup>2</sup>
+7. 100 * (a_next - a)<sup>2</sup>
 
 ## Choice of T, N, and dt
 
