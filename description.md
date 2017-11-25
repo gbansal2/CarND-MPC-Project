@@ -7,15 +7,23 @@ The state of the vehicle is defined by the vector - [x, y, psi, v, cte, epsi], w
 
 The model to update x, y, psi, v, is essentially based on equations of motion, which are given by:
 
-x = x0 + v*\cos(psi)*\dt
+x = x0 + v * cos(psi) * dt
 
-y = y0 + v*\sin(psi)*\dt
+y = y0 + v * sin(psi) * dt
 
-psi = psi0 + v/Lf*\delta0*\dt
+psi = psi0 + v/Lf * delta0 *dt
 
-v = v0 + a0*\dt
+v = v0 + a0 * dt
 
 The actuators consist of delta - steering angle, and a - throttle. 
+
+The cte and epsi are defined as:
+
+cte = f(x) - y
+
+epsi = psi - psi_des
+
+Here, f(x) is the reference trajectory which is a polynomial fit of order 3. psi_des is the desired orientation of the reference trajector, which is given by f'(x).
 
 
 
