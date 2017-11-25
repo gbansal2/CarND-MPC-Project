@@ -46,7 +46,18 @@ I set N to be as high as possible without causing too much computational overhea
 
 The value of dt was chosen small enough such that the effects of discretization error were reduced. A too small dt will reduce the horizon. A lower value of dt was needed at increased reference velocity.
 
+## Polynomial fitting and MPC pre-processing
 
+A third order polynomial is fitted to the waypoints outputted by the simulator.
+
+The waypoints from the simulator are transformed from global coordinates into car coordinates. This includes rotation as well as translation. 
+
+In car coordinates, the position of the vehicle is always [0,0] and also the orientation of the car is 0. 
+
+## Latency handling
+
+In order to handle the latency of communication and actuation, the initial state outputted from the simulator is advanced by 100ms, and this new state is set as the initial state for solving the control optimization problem.
+The state update equations (equations of motion) shown above are used for this.
 
 
 
