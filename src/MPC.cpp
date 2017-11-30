@@ -6,12 +6,10 @@
 using CppAD::AD;
 
 // TODO: Set the timestep length and duration
-//size_t N = 200;
-//size_t N = 250;
-size_t N = 250;
-double dt = 0.005;
+size_t N = 120;
+double dt = 0.015;
+//size_t N = 500;
 //double dt = 0.005;
-//double dt = 0.002;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -25,7 +23,7 @@ double dt = 0.005;
 // This is the length from front to CoG that has a similar radius.
 const double Lf = 2.67;
 
-const double ref_v = 30;
+const double ref_v = 20;
 // The solver takes all the state variables and actuator
 // variables in a singular vector. Thus, we should to establish
 // when one variable starts and another ends to make our lifes easier.
@@ -60,13 +58,15 @@ class FG_eval {
 
     for (int t = 0; t < N-1; t++) {
         fg[0] += 200.0*CppAD::pow(vars[delta_start + t], 2);
-        //fg[0] += 100.0*CppAD::pow(vars[a_start + t], 2);
-        fg[0] += 100.0*CppAD::pow(vars[a_start + t], 2);
+        //fg[0] += CppAD::pow(vars[delta_start + t], 2);
+        fg[0] += CppAD::pow(vars[a_start + t], 2);
+        //fg[0] += CppAD::pow(vars[a_start + t], 2);
     }
 
     for (int t = 0; t < N-2; t++) {
         fg[0] += 500.0*CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
         fg[0] += 100.0*CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
+        //fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
 
     // Setup Constraints
@@ -79,8 +79,7 @@ class FG_eval {
     // index 0 of `fg`.
     // This bumps up the position of all the other values.
     fg[1 + x_start] = vars[x_start];
-    fg[1 + y_start] = vars[y_start];
-    fg[1 + psi_start] = vars[psi_start];
+    fg[1 + y_start] = vars[y_start]; fg[1 + psi_start] = vars[psi_start];
     fg[1 + v_start] = vars[v_start];
     fg[1 + cte_start] = vars[cte_start];
     fg[1 + epsi_start] = vars[epsi_start];
@@ -144,20 +143,6 @@ vector<double> MPC::Solve(Eigen::VectorXd& x0, Eigen::VectorXd& coeffs) {
   double v = x0[3];
   double cte = x0[4];
   double epsi = x0[5];
-
-  //Update state for latency of 100ms
-  //0.1s
-  double lat=0.1;
-  x += v*cos(psi)*lat;
-  y += v*sin(psi)*lat;
-
-  double f0 = coeffs[0] + coeffs[1] * x + coeffs[2]*pow(x,2)
-                      + coeffs[3]*pow(x,3);
-  double psides0 = atan(coeffs[1] + 2*x*coeffs[2]
-                           + 3*pow(x,2)*coeffs[3]);
-  cte = f0 - y;
-  epsi = 0 - psides0;
- 
 
   // TODO: Set the number of model variables (includes both states and inputs).
   // For example: If the state is a 4 element vector, the actuators is a 2

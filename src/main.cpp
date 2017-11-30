@@ -106,6 +106,8 @@ int main() {
           double py = j[1]["y"];
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
+          double delta = j[1]["steering_angle"];
+          double a = j[1]["throttle"];
 
           transform(ptsx1, ptsy1, px, py, psi, ptsx_trans, ptsy_trans);
 
@@ -123,9 +125,23 @@ int main() {
           
           double epsi = 0 - atan(coeffs[1]);
 
+          //Update for latency of 100ms
+	  double latency_dt = 0.1/60/60; //hours
+          //v = v*0.44704;
+
+          double Lf = 2.67;
+        
+          px = v * cos(psi) * latency_dt;
+  	  py = v * sin(psi) * latency_dt;
+	  psi = v * delta / Lf * latency_dt;
+	  v = v + a * latency_dt;
+	  cte = cte + v * sin(epsi) * latency_dt;
+	  epsi = epsi + v * delta / Lf * latency_dt;
+
+
           Eigen::VectorXd state(6);
-          //state << px, py, psi, v, cte, epsi;
-          state << 0.0, 0.0, 0.0, v, cte, epsi;
+          state << px, py, psi, v, cte, epsi;
+          //state << 0.0, 0.0, 0.0, v, cte, epsi;
 
           auto vars = mpc.Solve(state, coeffs);
 
