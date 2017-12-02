@@ -109,6 +109,8 @@ int main() {
           double delta = j[1]["steering_angle"];
           double a = j[1]["throttle"];
 
+          delta = -delta;
+
           transform(ptsx1, ptsy1, px, py, psi, ptsx_trans, ptsy_trans);
 
           //Eigen::Map<Eigen::VectorXd> ptsx(ptsx1.data(),ptsx1.size());
@@ -126,17 +128,20 @@ int main() {
           double epsi = 0 - atan(coeffs[1]);
 
           //Update for latency of 100ms
-	  double latency_dt = 0.1/60/60; //hours
-          //v = v*0.44704;
+	  //double latency_dt = 0.1/60/60; //hours
+	  double latency_dt = 0.1; //sec
+          v = v*0.44704;
+
+          psi = delta;
 
           double Lf = 2.67;
         
           px = v * cos(psi) * latency_dt;
   	  py = v * sin(psi) * latency_dt;
-	  psi = v * delta / Lf * latency_dt;
-	  v = v + a * latency_dt;
 	  cte = cte + v * sin(epsi) * latency_dt;
 	  epsi = epsi + v * delta / Lf * latency_dt;
+	  psi = psi + v * delta / Lf * latency_dt;
+	  v = v + a * latency_dt;
 
 
           Eigen::VectorXd state(6);
